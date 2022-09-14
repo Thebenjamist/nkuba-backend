@@ -1,0 +1,43 @@
+# single order functions
+createOrder:
+  handler: lambdas/endpoints/orders.createOrder
+  events:
+    - httpApi:
+        path: /create-order
+        method: POST
+
+getOrder:
+  handler: lambdas/endpoints/orders.getOrder
+  events:
+    - httpApi:
+        path: /get-order/{id}
+        method: GET
+
+updateOrder:
+  handler: lambdas/endpoints/orders.updateOrder
+  events:
+    - httpApi:
+        path: /update-order
+        method: PUT
+
+# multiple order functions
+getAllOrders:
+  handler: lambdas/endpoints/orders.getAllOrders
+  events:
+    - httpApi:
+        path: /get-all-orders
+        method: GET
+
+getActiveOrders:
+  handler: lambdas/endpoints/orders.getActiveOrders
+  events:
+    - httpApi:
+        path: /get-active-orders
+        method: GET
+
+getCustomerOrders:
+  handler: lambdas/endpoints/orders.getCustomerOrders
+  events:
+    - httpApi:
+        path: /get-customer-orders/{customer}
+        method: GET
