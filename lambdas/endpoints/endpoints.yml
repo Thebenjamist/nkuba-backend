@@ -20,6 +20,13 @@ updateOrder:
         path: /update-order
         method: PUT
 
+deleteOrder:
+  handler: lambdas/endpoints/orders.deleteOrder
+  events:
+    - httpApi:
+        path: /delete-order
+        method: DELETE
+
 # multiple order functions
 getAllOrders:
   handler: lambdas/endpoints/orders.getAllOrders
