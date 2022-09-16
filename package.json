@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "npx nodemon --exec serverless offline"
+    "start": "npx nodemon --exec serverless offline start"
   },
   "devDependencies": {
     "aws-sdk": "^2.1214.0",

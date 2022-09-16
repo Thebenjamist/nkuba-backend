@@ -5,7 +5,11 @@ frameworkVersion: "2 || 3"
 provider:
   name: aws
   runtime: nodejs12.x
+  profile: personal
+  region: af-south-1
   lambdaHashingVersion: 20201221
+  httpApi:
+    cors: true
   iam:
     role:
       statements:
@@ -25,6 +29,12 @@ custom:
       inMemory: true
       dbPath: "dynamodb"
       migrate: true
+
+package:
+  individually: false
+  excludeDevDependencies: true
+  exclude:
+    - .dynamodb/**
 
 functions:
   - ${file(lambdas/endpoints/endpoints.yml)}

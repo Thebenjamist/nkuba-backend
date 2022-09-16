@@ -44,7 +44,7 @@ const Dynamo = {
       .get({ TableName, Key: { id: data.id } })
       .promise();
 
-    if (!exists || !exists?.Item) {
+    if (!exists || !exists.Item) {
       await documentClient.put(params).promise();
     } else {
       throw new Error("Entry already exists, try again");
