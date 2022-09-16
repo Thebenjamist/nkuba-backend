@@ -9,3 +9,6 @@ jspm_packages
 
 # dynamo
 shared-local-instance.db
+
+# mac
+.DS_Store
