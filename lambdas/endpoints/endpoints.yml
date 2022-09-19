@@ -13,6 +13,13 @@ getOrder:
         path: /get-order/{id}
         method: GET
 
+getOrderByRef:
+  handler: lambdas/endpoints/orders.getOrderByRef
+  events:
+    - httpApi:
+        path: /get-order-by-ref/{reference}
+        method: GET
+
 updateOrder:
   handler: lambdas/endpoints/orders.updateOrder
   events:

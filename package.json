@@ -12,6 +12,8 @@
     "serverless-offline": "^10.0.2"
   },
   "dependencies": {
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1",
     "uuidv4": "^6.2.13"
   }
 }
