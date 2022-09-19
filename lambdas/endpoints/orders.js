@@ -1,6 +1,8 @@
 const Responses = require("../common/responses");
 const Dynamo = require("../common/dynamo");
 const { uuid } = require("uuidv4");
+const crypto = require("crypto");
+const { DynamoDB } = require("aws-sdk");
 
 exports.createOrder = async (event) => {
   const request = JSON.parse(event.body);
@@ -8,12 +10,20 @@ exports.createOrder = async (event) => {
   const id = uuid();
   request.id = id;
   request.status = "pending";
+  request.code = crypto
+    .randomBytes(5)
+    .toString("hex")
+    .slice(0, 5)
+    .toUpperCase();
 
   let response = Responses[400]({ message: "Failed to create order" });
 
   await Dynamo.write(request, "orders-table")
     .then((res) => {
-      response = Responses[200]({ message: "Created the order", res });
+      response = Responses[200]({
+        message: "Created the order",
+        data: { code: request.code },
+      });
     })
     .catch((err) => {
       response = Responses[400]({
@@ -44,14 +54,24 @@ exports.getOrderByRef = async (event) => {
   const request = event.pathParameters;
   let response = Responses[400]({ message: "Failed to fetch order" });
 
-  await Dynamo.get(request.id, "orders-table")
+  const FilterExpression = "code = :code";
+  const ExpressionAttributeValues = { ":code": request.reference };
+
+  await Dynamo.scan({
+    FilterExpression,
+    ExpressionAttributeValues,
+    TableName: "orders-table",
+  })
+
     .then((data) => {
-      response = Responses[200]({ message: "Fetched the order", data });
+      response = Responses[200]({
+        message: "Fetched the order",
+        data: data[0],
+      });
     })
     .catch((err) => {
       response = Responses[400]({
-        message: "Failed to fetch order",
-        err: err.toString(),
+        message: err.message || "Failed to create order",
       });
     });
   return response;

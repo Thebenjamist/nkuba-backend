@@ -10,6 +10,7 @@ provider:
   lambdaHashingVersion: 20201221
   httpApi:
     cors: true
+  timeout: 15
   iam:
     role:
       statements:
