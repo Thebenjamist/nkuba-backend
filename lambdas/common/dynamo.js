@@ -61,7 +61,11 @@ const Dynamo = {
     const data = await documentClient.scan(params).promise();
 
     if (!data || !data.Items) {
-      throw Error(`There was an error fetching the data from ${TableName}`);
+      throw new Error(`There was an error fetching the data from ${TableName}`);
+    }
+
+    if (data.Items.length === 0) {
+      throw new Error(`Items not found`);
     }
 
     return data.Items;
