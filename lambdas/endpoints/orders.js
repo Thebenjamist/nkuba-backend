@@ -22,7 +22,7 @@ exports.createOrder = async (event) => {
     .then((res) => {
       response = Responses[200]({
         message: "Created the order",
-        data: { code: request.code },
+        data: res,
       });
     })
     .catch((err) => {
@@ -64,6 +64,9 @@ exports.getOrderByRef = async (event) => {
   })
 
     .then((data) => {
+      if (data.length === 0) {
+        throw new Error(`Order with reference ${request.reference} not found`);
+      }
       response = Responses[200]({
         message: "Fetched the order",
         data: data[0],
@@ -129,13 +132,88 @@ exports.getAllOrders = async (event) => {
 };
 
 exports.getActiveOrders = async (event) => {
-  console.log("Event: ", event.body);
+  let response = Responses[400]({ message: "Failed to fetch orders" });
 
-  return Responses[200]({ message: "Fetched active orders" });
+  const FilterExpression = "#order_status <> :status";
+  const ExpressionAttributeValues = { ":status": "completed" };
+  const ExpressionAttributeNames = { "#order_status": "status" };
+
+  await Dynamo.scan({
+    FilterExpression,
+    ExpressionAttributeValues,
+    ExpressionAttributeNames,
+    TableName: "orders-table",
+  })
+
+    .then((data) => {
+      response = Responses[200]({
+        message: "Fetched the active orders",
+        data,
+      });
+    })
+    .catch((err) => {
+      response = Responses[400]({
+        message: err.message || "Failed to fetch active orders",
+      });
+    });
+  return response;
 };
 
 exports.getCustomerOrders = async (event) => {
-  console.log("Event: ", event.body);
+  const request = event.pathParameters;
+  let response = Responses[400]({ message: "Failed to fetch orders" });
 
-  return Responses[200]({ message: "Fetched customer orders" });
+  const FilterExpression = "user_id = :user_id";
+  const ExpressionAttributeValues = { ":user_id": request.id };
+
+  await Dynamo.scan({
+    FilterExpression,
+    ExpressionAttributeValues,
+    TableName: "orders-table",
+  })
+
+    .then((data) => {
+      response = Responses[200]({
+        message: "Fetched the customer's orders",
+        data,
+      });
+    })
+    .catch((err) => {
+      response = Responses[400]({
+        message: err.message || "Failed to fetch customer orders",
+      });
+    });
+  return response;
+};
+
+exports.getContactOrders = async (event) => {
+  const request = event.pathParameters;
+  let response = Responses[400]({ message: "Failed to fetch orders" });
+
+  const FilterExpression =
+    request.contactType === "sender"
+      ? "senderContact = :contact_number"
+      : "recipientContact = :contact_number";
+
+  const ExpressionAttributeValues = { ":contact_number": request.contact };
+
+  await Dynamo.scan({
+    FilterExpression,
+    ExpressionAttributeValues,
+    TableName: "orders-table",
+  })
+
+    .then((data) => {
+      response = Responses[200]({
+        message: "Fetched the customer's orders",
+        data,
+      });
+    })
+    .catch((err) => {
+      response = Responses[400]({
+        message: err.message || "Failed to fetch customer orders",
+      });
+    });
+
+  return response;
 };

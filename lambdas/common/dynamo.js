@@ -8,13 +8,14 @@ if (process.env.IS_OFFLINE) {
     endpoint: "http://localhost:8000",
   };
 }
+const { env } = process.env;
 
 const documentClient = new AWS.DynamoDB.DocumentClient(options);
 
 const Dynamo = {
   async get(id, TableName) {
     const params = {
-      TableName,
+      TableName: `${TableName}-${env}`,
       Key: {
         id,
       },
@@ -24,7 +25,7 @@ const Dynamo = {
 
     if (!data || !data.Item) {
       throw Error(
-        `There was an error fetching the data of id of ${id} from ${TableName}`
+        `There was an error fetching the data of id of ${id} from ${TableName}-${env}`
       );
     }
 
@@ -32,40 +33,52 @@ const Dynamo = {
   },
 
   async write(data, TableName) {
+    let res;
     if (!data.id) {
       throw new Error("No id in the data");
     }
     const params = {
-      TableName,
+      TableName: `${TableName}-${env}`,
       Item: data,
     };
 
     const exists = await documentClient
-      .get({ TableName, Key: { id: data.id } })
+      .get({ TableName: params.TableName, Key: { id: data.id } })
       .promise();
 
     if (!exists || !exists.Item) {
-      await documentClient.put(params).promise();
+      res = await documentClient.put(params).promise();
     } else {
+      console.log("Exists: ", exists);
       throw new Error("Entry already exists, try again");
     }
+
+    return params.Item;
   },
 
-  async scan({ FilterExpression, ExpressionAttributeValues, TableName }) {
+  async scan({
+    FilterExpression,
+    ExpressionAttributeValues,
+    TableName,
+    ExpressionAttributeNames,
+  }) {
     const params = {
-      TableName,
+      TableName: `${TableName}-${env}`,
       FilterExpression,
       ExpressionAttributeValues,
+      ExpressionAttributeNames,
     };
 
     const data = await documentClient.scan(params).promise();
 
     if (!data || !data.Items) {
-      throw new Error(`There was an error fetching the data from ${TableName}`);
+      throw new Error(
+        `There was an error fetching the data from ${params.TableName}`
+      );
     }
 
     if (data.Items.length === 0) {
-      throw new Error(`Items not found`);
+      return [];
     }
 
     return data.Items;
@@ -76,7 +89,7 @@ const Dynamo = {
       throw Error("No id in the data");
     }
     const params = {
-      TableName,
+      TableName: `${TableName}-${env}`,
       Key: {
         id,
       },
@@ -93,12 +106,13 @@ const Dynamo = {
     ConditionExpression,
     ExpressionAttributeNames,
     ExpressionAttributeValues,
+    TableName,
   }) {
     if (!data.id) {
       throw Error("No id in the data");
     }
     const params = {
-      TableName,
+      TableName: `${TableName}-${env}`,
       Key,
       UpdateExpression,
       ConditionExpression,
