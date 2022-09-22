@@ -6,7 +6,16 @@ provider:
   name: aws
   runtime: nodejs12.x
   profile: personal
-  region: af-south-1
+  region: eu-west-2
+  stage: ${self:provider.environment.env}
+  stackName: ${self:service}-${self:provider.environment.env}
+  environment:
+    user_pool_client_id:
+      Ref: CognitoUserPoolClient
+    user_pool_id:
+      Ref: CognitoUserPool
+    env: dev
+
   lambdaHashingVersion: 20201221
   httpApi:
     cors: true
@@ -15,12 +24,14 @@ provider:
     role:
       statements:
         - Effect: Allow
-          Action: "dynamodb:*"
+          Action: "*"
           Resource: "*"
 
 plugins:
   - serverless-dynamodb-local
   - serverless-offline
+  - serverless-export-env
+
 custom:
   dynamodb:
     stages:
@@ -52,4 +63,47 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-        TableName: orders-table
+        TableName: orders-table-${self:provider.stage}
+    UserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        TableName: users-table-${self:provider.stage}
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: nkuba-user-pool-${self:provider.stage}
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+        EmailConfiguration:
+          EmailSendingAccount: DEVELOPER
+          From: info@nkubalogistics.com
+          ReplyToEmailAddress: ben@nkubalogistics.com
+          SourceArn: arn:aws:ses:eu-west-2:631409944731:identity/nkubalogistics.com
+        VerificationMessageTemplate:
+          DefaultEmailOption: CONFIRM_WITH_LINK
+          EmailMessageByLink: ${file(emails/verification.yml)}
+          EmailSubjectByLink: Nkuba Logistics - Email Verification Link
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: nkuba-user-pool-client-${self:provider.stage}
+        UserPoolId:
+          Ref: CognitoUserPool
+        ExplicitAuthFlows:
+          - ADMIN_NO_SRP_AUTH
+        GenerateSecret: false
+    CognitoUserPoolDomain:
+      Type: AWS::Cognito::UserPoolDomain
+      Properties:
+        UserPoolId:
+          Ref: CognitoUserPool
+        Domain: nkuba-logistics-${self:provider.stage}
