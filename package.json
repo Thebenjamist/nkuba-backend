@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "npx nodemon --exec serverless offline start"
+    "start": "npx nodemon --exec serverless offline start --httpPort 9090"
   },
   "devDependencies": {
     "aws-sdk": "^2.1214.0",
     "nodemon": "^2.0.19",
     "serverless-dynamodb-local": "^0.2.40",
+    "serverless-export-env": "github:arabold/serverless-export-env",
     "serverless-offline": "^10.0.2"
   },
   "dependencies": {

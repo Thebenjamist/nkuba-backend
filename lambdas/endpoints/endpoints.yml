@@ -53,5 +53,48 @@ getCustomerOrders:
   handler: lambdas/endpoints/orders.getCustomerOrders
   events:
     - httpApi:
-        path: /get-customer-orders/{customer}
+        path: /get-customer-orders/{id}
+        method: GET
+
+getContactOrders:
+  handler: lambdas/endpoints/orders.getContactOrders
+  events:
+    - httpApi:
+        path: /get-contact-orders/{contactType}/{contact}
+        method: GET
+
+# user functions
+createUser:
+  handler: lambdas/endpoints/users.createUser
+  events:
+    - httpApi:
+        path: /create-user
+        method: POST
+
+signIn:
+  handler: lambdas/endpoints/users.signIn
+  events:
+    - httpApi:
+        path: /sign-in-user
+        method: POST
+
+checkSession:
+  handler: lambdas/endpoints/users.checkSession
+  events:
+    - httpApi:
+        path: /check-session
+        method: POST
+
+signOut:
+  handler: lambdas/endpoints/users.signOut
+  events:
+    - httpApi:
+        path: /sign-out-user
+        method: POST
+
+getUser:
+  handler: lambdas/endpoints/users.getUser
+  events:
+    - httpApi:
+        path: /get-user/{id}
         method: GET
