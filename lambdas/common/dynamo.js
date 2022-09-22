@@ -32,6 +32,7 @@ const Dynamo = {
   },
 
   async write(data, TableName) {
+    let res;
     if (!data.id) {
       throw new Error("No id in the data");
     }
@@ -45,17 +46,26 @@ const Dynamo = {
       .promise();
 
     if (!exists || !exists.Item) {
-      await documentClient.put(params).promise();
+      res = await documentClient.put(params).promise();
     } else {
+      console.log("Exists: ", exists);
       throw new Error("Entry already exists, try again");
     }
+
+    return params.Item;
   },
 
-  async scan({ FilterExpression, ExpressionAttributeValues, TableName }) {
+  async scan({
+    FilterExpression,
+    ExpressionAttributeValues,
+    TableName,
+    ExpressionAttributeNames,
+  }) {
     const params = {
       TableName,
       FilterExpression,
       ExpressionAttributeValues,
+      ExpressionAttributeNames,
     };
 
     const data = await documentClient.scan(params).promise();
@@ -65,7 +75,7 @@ const Dynamo = {
     }
 
     if (data.Items.length === 0) {
-      throw new Error(`Items not found`);
+      return [];
     }
 
     return data.Items;
