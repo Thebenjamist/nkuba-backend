@@ -7,11 +7,14 @@ provider:
   runtime: nodejs12.x
   profile: personal
   region: eu-west-2
+  stage: ${self:provider.environment.env}
+  stackName: ${self:service}-${self:provider.environment.env}
   environment:
     user_pool_client_id:
       Ref: CognitoUserPoolClient
     user_pool_id:
       Ref: CognitoUserPool
+    env: dev
 
   lambdaHashingVersion: 20201221
   httpApi:
@@ -60,7 +63,7 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-        TableName: orders-table
+        TableName: orders-table-${self:provider.stage}
     UserTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -71,11 +74,11 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-        TableName: users-table
+        TableName: users-table-${self:provider.stage}
     CognitoUserPool:
       Type: AWS::Cognito::UserPool
       Properties:
-        UserPoolName: nkuba-user-pool
+        UserPoolName: nkuba-user-pool-${self:provider.stage}
         UsernameAttributes:
           - email
         AutoVerifiedAttributes:
@@ -92,7 +95,7 @@ resources:
     CognitoUserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
-        ClientName: nkuba-user-pool-client
+        ClientName: nkuba-user-pool-client-${self:provider.stage}
         UserPoolId:
           Ref: CognitoUserPool
         ExplicitAuthFlows:
@@ -103,4 +106,4 @@ resources:
       Properties:
         UserPoolId:
           Ref: CognitoUserPool
-        Domain: nkuba-logistics
+        Domain: nkuba-logistics-${self:provider.stage}
