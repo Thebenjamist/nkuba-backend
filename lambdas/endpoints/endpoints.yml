@@ -27,6 +27,13 @@ updateOrder:
         path: /update-order
         method: PUT
 
+updateOrderStatus:
+  handler: lambdas/endpoints/orders.updateOrderStatus
+  events:
+    - httpApi:
+        path: /update-order-status
+        method: PUT
+
 deleteOrder:
   handler: lambdas/endpoints/orders.deleteOrder
   events:
@@ -69,6 +76,27 @@ createUser:
   events:
     - httpApi:
         path: /create-user
+        method: POST
+
+resetPassword:
+  handler: lambdas/endpoints/users.resetPassword
+  events:
+    - httpApi:
+        path: /reset-password
+        method: POST
+
+setNewPassword:
+  handler: lambdas/endpoints/users.setNewPassword
+  events:
+    - httpApi:
+        path: /set-new-password
+        method: POST
+
+changeUserRole:
+  handler: lambdas/endpoints/users.changeUserRole
+  events:
+    - httpApi:
+        path: /update-user-role
         method: POST
 
 signIn:
