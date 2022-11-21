@@ -108,9 +108,6 @@ const Dynamo = {
     ExpressionAttributeValues,
     TableName,
   }) {
-    if (!data.id) {
-      throw Error("No id in the data");
-    }
     const params = {
       TableName: `${TableName}-${env}`,
       Key,
@@ -120,9 +117,8 @@ const Dynamo = {
       ExpressionAttributeValues,
     };
 
-    await documentClient.update(params).promise();
-
-    return;
+    const res = await documentClient.update(params).promise();
+    return res;
   },
 };
 
