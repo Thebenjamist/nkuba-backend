@@ -20,7 +20,36 @@ exports.createUser = async (event) => {
     .catch((err) => {
       response = Responses[400]({
         message: "Failed to create user",
-        err: err.toString(),
+        err: err.message,
+      });
+    });
+  return response;
+};
+
+exports.changeUserRole = async (event) => {
+  const request = JSON.parse(event.body);
+  let response = Responses[400]({ message: "Failed to change user role" });
+
+  if (!request || !request.email || !request.role) {
+    return Responses[400]({
+      message: "Failed to update role, please include email and new role",
+    });
+  }
+
+  await Cognito.changeUserRole({
+    email: request.email,
+    role: request.role,
+  })
+    .then(async (res) => {
+      response = Responses[200]({
+        message: "Changed the user role",
+        res,
+      });
+    })
+    .catch((err) => {
+      response = Responses[400]({
+        message: "Failed to change user role",
+        err: err.message,
       });
     });
   return response;
@@ -43,7 +72,7 @@ exports.signIn = async (event) => {
     .catch((err) => {
       response = Responses[400]({
         message: "Failed to sign in user",
-        err: err.toString(),
+        err: err.message,
       });
     });
   return response;
@@ -63,7 +92,7 @@ exports.signOut = async (event) => {
     .catch((err) => {
       response = Responses[400]({
         message: "Failed to sign out user",
-        err: err.toString(),
+        err: err.message,
       });
     });
   return response;
@@ -87,10 +116,9 @@ exports.checkSession = async (event) => {
         });
     })
     .catch((err) => {
-      console.log("Error: ", err.toString());
       response = Responses[400]({
         message: "Session invalid",
-        err: err.toString(),
+        err: err.message,
       });
     });
 
@@ -111,7 +139,63 @@ exports.getUser = async (event) => {
     .catch((err) => {
       response = Responses[400]({
         message: "Failed to fetch user",
-        err: err.toString(),
+        err: err.message,
+      });
+    });
+  return response;
+};
+
+exports.resetPassword = async (event) => {
+  const request = JSON.parse(event.body);
+  let response = Responses[400]({ message: "Failed to reset password" });
+
+  if (!request || !request.username) {
+    response = Responses[400]({ message: "Please include username" });
+    return response;
+  }
+
+  await Cognito.resetPassword({
+    username: request.username,
+  })
+    .then((data) => {
+      response = Responses[200]({
+        message: "Reset password",
+        data,
+      });
+    })
+    .catch((err) => {
+      response = Responses[400]({
+        message: "Failed to reset user password",
+        err: err.message,
+      });
+    });
+  return response;
+};
+
+exports.setNewPassword = async (event) => {
+  const request = JSON.parse(event.body);
+  let response = Responses[400]({ message: "Failed to reset password" });
+
+  if (!request || !request.username || !request.code || !request.password) {
+    response = Responses[400]({ message: "Missing fields in request" });
+    return response;
+  }
+
+  await Cognito.setNewPassword({
+    username: request.username,
+    code: request.code,
+    password: request.password,
+  })
+    .then((data) => {
+      response = Responses[200]({
+        message: "Successfully set new password",
+        data,
+      });
+    })
+    .catch((err) => {
+      response = Responses[400]({
+        message: "Failed to set new user password",
+        err: err.message,
       });
     });
   return response;
