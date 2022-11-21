@@ -2,7 +2,6 @@ const Responses = require("../common/responses");
 const Dynamo = require("../common/dynamo");
 const { uuid } = require("uuidv4");
 const crypto = require("crypto");
-const { DynamoDB } = require("aws-sdk");
 
 exports.createOrder = async (event) => {
   const request = JSON.parse(event.body);
@@ -44,7 +43,7 @@ exports.getOrder = async (event) => {
     .catch((err) => {
       response = Responses[400]({
         message: "Failed to fetch order",
-        err: err.toString(),
+        err: err.message,
       });
     });
   return response;
@@ -91,7 +90,38 @@ exports.updateOrder = async (event) => {
     .catch((err) => {
       response = Responses[400]({
         message: "Failed to update order",
-        err: err.toString(),
+        err: err.message,
+      });
+    });
+  return response;
+};
+
+exports.updateOrderStatus = async (event) => {
+  const request = JSON.parse(event.body);
+  let response = Responses[400]({ message: "Failed to update order" });
+
+  if (!request || !request.id) {
+    return Responses[400]({ message: "Please include order id" });
+  }
+
+  if (!request || !request.status) {
+    return Responses[400]({ message: "Please include new status" });
+  }
+
+  await Dynamo.update({
+    Key: { id: request.id },
+    UpdateExpression: "set #order_status = :status",
+    ExpressionAttributeNames: { "#order_status": "status" },
+    ExpressionAttributeValues: { ":status": request.status },
+    TableName: "orders-table",
+  })
+    .then((res) => {
+      response = Responses[200]({ message: "Updated the order", res });
+    })
+    .catch((err) => {
+      response = Responses[400]({
+        message: "Failed to update order",
+        err: err.message,
       });
     });
   return response;
@@ -108,7 +138,7 @@ exports.deleteOrder = async (event) => {
     .catch((err) => {
       response = Responses[400]({
         message: "Failed to Delete order",
-        err: err.toString(),
+        err: err.message,
       });
     });
   return response;
@@ -125,7 +155,7 @@ exports.getAllOrders = async (event) => {
     .catch((err) => {
       response = Responses[400]({
         message: "Failed to fetch order",
-        err: err.toString(),
+        err: err.message,
       });
     });
   return response;
