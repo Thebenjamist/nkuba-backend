@@ -32,7 +32,7 @@ updateOrderStatus:
   events:
     - httpApi:
         path: /update-order-status
-        method: PUT
+        method: POST
 
 deleteOrder:
   handler: lambdas/endpoints/orders.deleteOrder
