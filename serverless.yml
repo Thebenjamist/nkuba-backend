@@ -26,11 +26,15 @@ provider:
         - Effect: Allow
           Action: "*"
           Resource: "*"
+  deploymentBucket:
+    name: nkuba-serverless-deployment-bucket
+    serverSideEncryption: AES256
 
 plugins:
   - serverless-dynamodb-local
   - serverless-offline
   - serverless-export-env
+  - serverless-deployment-bucket
 
 custom:
   dynamodb:
@@ -92,6 +96,12 @@ resources:
           DefaultEmailOption: CONFIRM_WITH_LINK
           EmailMessageByLink: ${file(emails/verification.yml)}
           EmailSubjectByLink: Nkuba Logistics - Email Verification Link
+        Schema:
+          - AttributeDataType: String
+            DeveloperOnlyAttribute: False
+            Mutable: True
+            Name: role
+
     CognitoUserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
