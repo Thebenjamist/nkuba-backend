@@ -11,13 +11,15 @@ if (process.env.IS_OFFLINE) {
 const cognito = new AWS.CognitoIdentityServiceProvider({ region: "eu-west-2" });
 
 const Cognito = {
-  async create({ email, password, name, contact }) {
+  async create({ email, password, name, contact, role }) {
+    const UserAttributes = [{ Name: "custom:role", Value: role || "customer" }];
     const createCognitoUser = () =>
       cognito
         .signUp({
           ClientId: user_pool_client_id,
           Password: password,
           Username: email,
+          UserAttributes,
         })
         .promise();
 
@@ -90,6 +92,65 @@ const Cognito = {
       .catch((err) => {
         throw new Error(err);
       });
+  },
+
+  async resetPassword({ username }) {
+    const forgotPassword = () =>
+      cognito
+        .forgotPassword({
+          ClientId: user_pool_client_id,
+          Username: username,
+        })
+        .promise();
+
+    const res = await forgotPassword()
+      .then((res) => res)
+      .catch((err) => {
+        throw new Error(err);
+      });
+
+    return res;
+  },
+
+  async setNewPassword({ username, code, password }) {
+    const setPassword = () =>
+      cognito
+        .confirmForgotPassword({
+          ClientId: user_pool_client_id,
+          ConfirmationCode: code,
+          Password: password,
+          Username: username,
+        })
+        .promise();
+
+    const res = await setPassword()
+      .then((res) => res)
+      .catch((err) => {
+        throw new Error(err);
+      });
+
+    return res;
+  },
+
+  async changeUserRole({ email, role }) {
+    const UserAttributes = [{ Name: "custom:role", Value: role }];
+
+    const updateCognitoUser = () =>
+      cognito
+        .adminUpdateUserAttributes({
+          Username: email,
+          UserPoolId: user_pool_id,
+          UserAttributes,
+        })
+        .promise();
+
+    const res = await updateCognitoUser()
+      .then((data) => data)
+      .catch((err) => {
+        throw new Error(err);
+      });
+
+    return res;
   },
 };
 
