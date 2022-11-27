@@ -11,7 +11,7 @@
     "serverless-deployment-bucket": "^1.6.0",
     "serverless-dynamodb-local": "^0.2.40",
     "serverless-export-env": "github:arabold/serverless-export-env",
-    "serverless-offline": "^10.0.2"
+    "serverless-offline": "^11.6.0"
   },
   "dependencies": {
     "crypto": "^1.0.1",

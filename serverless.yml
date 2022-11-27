@@ -14,7 +14,7 @@ provider:
       Ref: CognitoUserPoolClient
     user_pool_id:
       Ref: CognitoUserPool
-    env: dev
+    env: stag
 
   lambdaHashingVersion: 20201221
   httpApi:
@@ -35,11 +35,11 @@ plugins:
   - serverless-offline
   - serverless-export-env
   - serverless-deployment-bucket
-
 custom:
   dynamodb:
     stages:
       - dev
+      - stag
     start:
       port: 8000
       inMemory: true
