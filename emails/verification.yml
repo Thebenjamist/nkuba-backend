@@ -1,9 +1,10 @@
 '
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html
 xmlns="http://www.w3.org/1999/xhtml"
 xmlns:o="urn:schemas-microsoft-com:office:office"
-style="font-family: arial, "helvetica neue", helvetica, sans-serif"
+style="font-family: arial, helvetica neue, helvetica, sans-serif"
 >
 <head>
 <meta charset="UTF-8" />
@@ -12,13 +13,13 @@ style="font-family: arial, "helvetica neue", helvetica, sans-serif"
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta content="telephone=no" name="format-detection" />
 <title>New Template</title>
-<!--[if (mso 16)]>
-<style type="text/css">
+<!--[if (mso 16)
+]><style type="text/css">
 a {
 text-decoration: none;
 }
-</style>
-<![endif]-->
+</style><!
+[endif]-->
 <!--[if gte mso 9
 ]><style>
 sup {
@@ -26,14 +27,13 @@ font-size: 100% !important;
 }
 </style><!
 [endif]-->
-<!--[if gte mso 9]>
-<xml>
+<!--[if gte mso 9
+]><xml>
 <o:OfficeDocumentSettings>
-<o:AllowPNG></o:AllowPNG>
-<o:PixelsPerInch>96</o:PixelsPerInch>
+<o:AllowPNG></o:AllowPNG> <o:PixelsPerInch>96</o:PixelsPerInch>
 </o:OfficeDocumentSettings>
-</xml>
-<![endif]-->
+</xml><!
+[endif]-->
 <!--[if !mso]><!-- -->
 <link
 href="https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i"
@@ -271,7 +271,7 @@ max-height: inherit !important;
 <body
 style="
 width: 100%;
-font-family: arial, "helvetica neue", helvetica, sans-serif;
+font-family: arial, helvetica neue, helvetica, sans-serif;
 -webkit-text-size-adjust: 100%;
 -ms-text-size-adjust: 100%;
 padding: 0;
@@ -279,11 +279,10 @@ margin: 0;
 "
 >
 <div class="es-wrapper-color" style="background-color: #f6f6f6">
-<!--[if gte mso 9]>
-<v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
-<v:fill type="tile" color="#f6f6f6"></v:fill>
-</v:background>
-<![endif]-->
+<!--[if gte mso 9
+]><v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
+<v:fill type="tile" color="#f6f6f6"></v:fill> </v:background
+><![endif]-->
 <table
 class="es-wrapper"
 width="100%"
@@ -300,6 +299,7 @@ width: 100%;
 height: 100%;
 background-repeat: repeat;
 background-position: center top;
+background-color: #f6f6f6;
 "
 >
 <tr>
@@ -382,11 +382,12 @@ align="center"
 style="
 padding: 0;
 margin: 0;
+padding-left: 40px;
+padding-right: 40px;
 font-size: 0px;
 "
 >
 <img
-class="adapt-img"
 src="https://jsflji.stripocdn.email/content/guids/CABINET_3c000325564e9031d37f420ecb751d72/images/group.png"
 alt
 style="
@@ -396,7 +397,7 @@ outline: none;
 text-decoration: none;
 -ms-interpolation-mode: bicubic;
 "
-width="160"
+width="100"
 />
 </td>
 </tr>
@@ -492,17 +493,16 @@ margin: 0;
 -webkit-text-size-adjust: none;
 -ms-text-size-adjust: none;
 mso-line-height-rule: exactly;
-font-family: lato, "helvetica neue",
+font-family: lato, helvetica neue,
 helvetica, arial, sans-serif;
-line-height: 56px;
+line-height: 44px;
 color: #333333;
-font-size: 28px;
+font-size: 22px;
 "
 >
 <strong
->Thanks for signing up for Nkuba
-Logistics!</strong
-><br />
+>Welcome to Nkuba Logistics!</strong
+>
 </p>
 </td>
 </tr>
@@ -556,15 +556,16 @@ margin: 0;
 -webkit-text-size-adjust: none;
 -ms-text-size-adjust: none;
 mso-line-height-rule: exactly;
-font-family: lato, "helvetica neue",
+font-family: lato, helvetica neue,
 helvetica, arial, sans-serif;
 line-height: 21px;
 color: #333333;
 font-size: 14px;
 "
 >
-Please click this {##link##} to verify
-your email address.<br />Head back to
+Please click the link below to verify your
+email address:<br /><br />{##Click
+here##}&nbsp;<br /><br />Head back to
 https://www.nkubalogistics.com and sign in
 to access your profile
 </p>
@@ -609,6 +610,30 @@ margin: 0px;
 </table>
 </td>
 </tr>
+<tr>
+<td
+align="center"
+style="
+padding: 0;
+margin: 0;
+font-size: 0px;
+"
+>
+<img
+class="adapt-img"
+src="https://jsflji.stripocdn.email/content/guids/CABINET_3c000325564e9031d37f420ecb751d72/images/2_aoR.png"
+alt
+style="
+display: block;
+border: 0;
+outline: none;
+text-decoration: none;
+-ms-interpolation-mode: bicubic;
+"
+width="560"
+/>
+</td>
+</tr>
 </table>
 </td>
 </tr>
@@ -624,4 +649,6 @@ margin: 0px;
 </table>
 </div>
 </body>
-</html>'
+</html>
+
+'
