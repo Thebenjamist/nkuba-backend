@@ -85,6 +85,8 @@ resources:
         UserPoolName: nkuba-user-pool-${self:provider.stage}
         UsernameAttributes:
           - email
+        UsernameConfiguration:
+          CaseSensitive: False
         AutoVerifiedAttributes:
           - email
         EmailConfiguration:
