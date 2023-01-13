@@ -130,7 +130,7 @@ getUser:
 sendEmail:
   handler: lambdas/endpoints/emails.sendEmail
   events:
-    - sns: email-topic
+    - sns: email-topic-${self:provider.stage}
 
 testEmail:
   handler: lambdas/endpoints/emails.testEmail
