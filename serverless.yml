@@ -35,6 +35,8 @@ plugins:
   - serverless-offline
   - serverless-export-env
   - serverless-deployment-bucket
+  - serverless-offline-sns
+
 custom:
   dynamodb:
     stages:
@@ -45,6 +47,10 @@ custom:
       inMemory: true
       dbPath: "dynamodb"
       migrate: true
+  serverless-offline-sns:
+    port: 4002 # a free port for the sns server to run on
+    debug: false
+    # accountId: 631409944731
 
 package:
   individually: false
