@@ -126,3 +126,15 @@ getUser:
     - httpApi:
         path: /get-user/{id}
         method: GET
+
+sendEmail:
+  handler: lambdas/endpoints/emails.sendEmail
+  events:
+    - sns: email-topic
+
+testEmail:
+  handler: lambdas/endpoints/emails.testEmail
+  events:
+    - httpApi:
+        path: /test-email
+        method: POST
