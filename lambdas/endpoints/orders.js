@@ -2,6 +2,8 @@ const Responses = require("../common/responses");
 const Dynamo = require("../common/dynamo");
 const { uuid } = require("uuidv4");
 const crypto = require("crypto");
+const SendNotificationService = require("../common/sns");
+const orderEmail = require("../../emails/newOrder");
 
 exports.createOrder = async (event) => {
   const request = JSON.parse(event.body);
@@ -18,17 +20,38 @@ exports.createOrder = async (event) => {
   let response = Responses[400]({ message: "Failed to create order" });
 
   await Dynamo.write(request, "orders-table")
-    .then((res) => {
+    .then(async (dynamo_res) => {
       response = Responses[200]({
         message: "Created the order",
-        data: res,
+        data: dynamo_res,
       });
+
+      await SendNotificationService.sendNotificationToSES({
+        to: ["ben@nkubalogistics.com", "benho061995@gmail.com"],
+        source: "orders",
+        message: orderEmail.newOrder,
+        textMessage: `An order has been placed, please check the dashboard for more information`,
+        subject: `New Order  - ${new Date().toDateString()}`,
+      })
+        .then((res) => {
+          response = Responses[200]({
+            message: "Created order and sent Notification to Ben",
+            data: { res, dynamo_res },
+          });
+        })
+        .catch((err) => {
+          response = Responses[400]({
+            message:
+              err.message || "Created order but failed to send notification",
+          });
+        });
     })
     .catch((err) => {
       response = Responses[400]({
         message: err.message || "Failed to create order",
       });
     });
+
   return response;
 };
 
