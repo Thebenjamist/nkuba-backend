@@ -9,6 +9,8 @@ const sns = new AWS.SNS({
   region: "eu-west-2",
 });
 
+const { env } = process.env;
+
 const SendNotificationService = {
   async sendNotificationToSES({ to, message, textMessage, subject, source }) {
     const params = {
@@ -22,7 +24,7 @@ const SendNotificationService = {
       sns
         .publish({
           Message: JSON.stringify(params),
-          TopicArn: "arn:aws:sns:eu-west-2:631409944731:email-topic",
+          TopicArn: `arn:aws:sns:eu-west-2:631409944731:email-topic-${env}`,
         })
         .promise();
 
